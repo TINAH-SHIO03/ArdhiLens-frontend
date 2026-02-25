@@ -17,6 +17,28 @@ class ResultScreen extends GetView<ResultController> {
         title: const Text('Verification Result'),
         actions: [
           IconButton(
+            onPressed: () {
+              if (!controller.canOpenAssistant) {
+                final logId = controller.activeVerificationLogId;
+                Get.snackbar(
+                  'AI Assistant',
+                  logId > 0
+                      ? 'Assistant is preparing. Please try again.'
+                      : 'Assistant log is missing for this result. Run a new verification.',
+                  snackPosition: SnackPosition.BOTTOM,
+                  duration: const Duration(seconds: 3),
+                );
+                return;
+              }
+
+              if (!controller.isAssistantOpen.value) {
+                controller.toggleAssistant();
+              }
+            },
+            icon: const Icon(Icons.support_agent),
+            tooltip: 'AI Assistant',
+          ),
+          IconButton(
             onPressed: () => Get.offAllNamed('/home'),
             icon: const Icon(Icons.home),
           ),
@@ -51,6 +73,8 @@ class ResultScreen extends GetView<ResultController> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 8),
+        _assistantCard(),
+        const SizedBox(height: 12),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(12),
@@ -103,8 +127,6 @@ class ResultScreen extends GetView<ResultController> {
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        _assistantCard(),
         const SizedBox(height: 16),
         PrimaryButton(label: 'Start New', onPressed: controller.startNew),
       ],
@@ -120,6 +142,8 @@ class ResultScreen extends GetView<ResultController> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 8),
+        _assistantCard(),
+        const SizedBox(height: 12),
         Card(
           color: const Color(0xFFFFF5F5),
           child: Padding(
@@ -161,8 +185,6 @@ class ResultScreen extends GetView<ResultController> {
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        _assistantCard(),
         const SizedBox(height: 16),
         PrimaryButton(label: 'Start New', onPressed: controller.startNew),
       ],
@@ -338,6 +360,10 @@ class ResultScreen extends GetView<ResultController> {
     final borderColor = isUser
         ? const Color(0xFF93C5FD)
         : const Color(0xFFE2E8F0);
+    final normalizedAction = message.recommendedAction.trim().toLowerCase();
+    final stepsForDisplay = message.steps
+        .where((step) => step.trim().toLowerCase() != normalizedAction)
+        .toList();
 
     return Align(
       alignment: alignment,
@@ -365,13 +391,28 @@ class ResultScreen extends GetView<ResultController> {
               ),
               const SizedBox(height: 4),
               Text(message.text, style: const TextStyle(fontSize: 14)),
-              if (!isUser && message.steps.isNotEmpty) ...[
+              if (!isUser && !message.related) ...[
+                const SizedBox(height: 8),
+                const Text(
+                  'This follow-up is outside this verification scope.',
+                  style: TextStyle(color: Colors.orange),
+                ),
+              ],
+              if (!isUser && message.recommendedAction.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                const Text(
+                  'Recommended action:',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                Text('- ${message.recommendedAction}'),
+              ],
+              if (!isUser && stepsForDisplay.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 const Text(
                   'Suggested next steps:',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
-                ...message.steps.map(
+                ...stepsForDisplay.map(
                   (step) => Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text('- $step'),

@@ -122,6 +122,8 @@ class ResultController extends GetxController {
         AssistantChatMessage(
           role: 'assistant',
           text: response.answer,
+          related: response.related,
+          recommendedAction: response.recommendedAction,
           steps: response.suggestedNextSteps,
         ),
       );
@@ -215,8 +217,34 @@ class ResultController extends GetxController {
     if (successId > 0) {
       return successId;
     }
+    final failureId = outcome.value?.failure?.verificationLogId ?? 0;
+    if (failureId > 0) {
+      return failureId;
+    }
 
-    return outcome.value?.failure?.verificationLogId ?? 0;
+    final latestHistory = _historyService.getHistory();
+    if (latestHistory.isEmpty) {
+      return 0;
+    }
+
+    final fromHistory = _asInt(latestHistory.first['verification_log_id']) ?? 0;
+    return fromHistory > 0 ? fromHistory : 0;
+  }
+
+  int? _asInt(dynamic value) {
+    if (value is int) {
+      return value;
+    }
+
+    if (value is num) {
+      return value.toInt();
+    }
+
+    if (value is String) {
+      return int.tryParse(value);
+    }
+
+    return null;
   }
 
   void _scrollChatToBottom() {
