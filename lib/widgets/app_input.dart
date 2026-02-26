@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'll_ui.dart';
+
 class AppInput extends StatelessWidget {
   const AppInput({
     super.key,
@@ -18,15 +20,19 @@ class AppInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LlFieldLabel(label),
+        const SizedBox(height: 8),
+        LlInputField(
+          controller: controller,
+          hint: hint ?? '',
+          icon: Icons.edit_rounded,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+        ),
+      ],
     );
   }
 }

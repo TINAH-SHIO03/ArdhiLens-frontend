@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'll_ui.dart';
+
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
@@ -14,21 +16,10 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: isLoading
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text(label),
-        ),
-      ),
+    return LlPrimaryButton(
+      label: label,
+      onPressed: onPressed,
+      isLoading: isLoading,
     );
   }
 }
