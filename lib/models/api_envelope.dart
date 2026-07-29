@@ -1,3 +1,5 @@
+import 'parsing.dart';
+
 class ApiEnvelope<T> {
   ApiEnvelope({
     required this.success,
@@ -17,16 +19,15 @@ class ApiEnvelope<T> {
     Map<String, dynamic> json,
     T Function(Map<String, dynamic> data) parser,
   ) {
-    final rawData = (json['data'] as Map?)?.cast<String, dynamic>();
+    final rawData = asStringKeyMap(json['data']);
 
     return ApiEnvelope<T>(
-      success: json['success'] as bool? ?? false,
-      message: json['message'] as String? ?? '',
+      success: asBool(json['success']) ?? false,
+      message: asString(json['message']),
       data: rawData == null ? null : parser(rawData),
-      errors: (json['errors'] as Map?)?.cast<String, dynamic>(),
+      errors: asStringKeyMap(json['errors']),
       timestamp:
-          DateTime.tryParse(json['timestamp'] as String? ?? '') ??
-          DateTime.now(),
+          DateTime.tryParse(asString(json['timestamp'])) ?? DateTime.now(),
     );
   }
 }

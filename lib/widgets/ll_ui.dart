@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../core/storage_service.dart';
 import '../design/app_colors.dart';
+import '../routes/app_routes.dart';
 
 class LlHeaderShell extends StatelessWidget {
   const LlHeaderShell({
@@ -74,12 +76,36 @@ class LlBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return LlActionIconButton(
       icon: Icons.arrow_back_ios_new_rounded,
-      onTap: onTap ?? Get.back,
-      backgroundColor: Colors.white.withValues(alpha: 0.15),
+      onTap: onTap ?? () => _defaultBack(context),
+      backgroundColor: Colors.white.withValues(alpha: 0.22),
       iconColor: Colors.white,
-      size: 40,
+      size: 48,
       iconSize: 18,
     );
+  }
+
+  static void _defaultBack(BuildContext context) {
+    final rootNav = Get.key.currentState;
+    if (rootNav != null && rootNav.canPop()) {
+      Get.back();
+      return;
+    }
+
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+      return;
+    }
+
+    try {
+      final storage = Get.find<StorageService>();
+      if (storage.isAuthenticated) {
+        Get.offAllNamed(Routes.home);
+      } else {
+        Get.offAllNamed(Routes.landing);
+      }
+    } catch (_) {
+      Get.offAllNamed(Routes.landing);
+    }
   }
 }
 
@@ -117,6 +143,9 @@ class LlActionIconButton extends StatelessWidget {
             color:
                 backgroundColor ?? Colors.white.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: (iconColor ?? Colors.white).withValues(alpha: 0.35),
+            ),
           ),
           child: Center(
             child: loading

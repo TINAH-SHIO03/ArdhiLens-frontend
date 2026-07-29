@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
+import '../controllers/notification_controller.dart';
+import '../design/verdict_style.dart';
+import '../routes/app_routes.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
@@ -13,7 +16,7 @@ class HomeScreen extends GetView<HomeController> {
       body: SafeArea(
         child: RefreshIndicator(
           color: const Color(0xFF1A6B4A),
-          onRefresh: controller.loadHomeData,
+          onRefresh: () => controller.loadHomeData(forceRefreshUser: true),
           child: Obx(() {
             final history = controller.history;
             final summary = _HistorySummary.from(history);
@@ -25,6 +28,7 @@ class HomeScreen extends GetView<HomeController> {
               slivers: [
                 SliverToBoxAdapter(child: _buildHeader()),
                 SliverToBoxAdapter(child: _buildVerificationCard()),
+                SliverToBoxAdapter(child: _buildBuyerTools()),
                 SliverToBoxAdapter(child: _buildSummaryRow(summary)),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -32,8 +36,8 @@ class HomeScreen extends GetView<HomeController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Recent Verifications',
+                        Text(
+                          'home_recent_verifications'.tr,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w700,
@@ -43,7 +47,7 @@ class HomeScreen extends GetView<HomeController> {
                         ),
                         if (history.isNotEmpty)
                           Text(
-                            '${history.length} total',
+                            'home_total_count'.trParams({'count': '${history.length}'}),
                             style: const TextStyle(
                               fontSize: 13,
                               color: Color(0xFF9E9E9E),
@@ -73,8 +77,8 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildHeader() {
     final user = controller.user.value;
-    final name = _safeText(user?.name, fallback: 'User');
-    final role = _safeText(user?.role, fallback: 'buyer').toUpperCase();
+    final name = _safeText(user?.name, fallback: 'common_user'.tr);
+    final role = _safeText(user?.role, fallback: 'common_buyer'.tr).toUpperCase();
     final email = _safeText(user?.email, fallback: '');
 
     return Container(
@@ -139,9 +143,9 @@ class HomeScreen extends GetView<HomeController> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Text(
-                          'ANGALIA ARDHI',
-                          style: TextStyle(
+                        Text(
+                          'common_brand'.tr,
+                          style: const TextStyle(
                             color: Color(0xFFD4AF37),
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
@@ -152,17 +156,21 @@ class HomeScreen extends GetView<HomeController> {
                     ),
                     Row(
                       children: [
+                        _buildNotificationBell(),
+                        const SizedBox(width: 8),
                         _buildIconAction(
-                          icon: Icons.settings_outlined,
-                          onTap: controller.openSettings,
+                          icon: Icons.folder_outlined,
+                          onTap: () => Get.toNamed(Routes.documents),
                         ),
                         const SizedBox(width: 8),
                         _buildIconAction(
-                          icon: Icons.logout_rounded,
-                          onTap: controller.isLoading.value
-                              ? null
-                              : controller.logout,
-                          loading: controller.isLoading.value,
+                          icon: Icons.workspace_premium_outlined,
+                          onTap: () => Get.toNamed(Routes.certificate),
+                        ),
+                        const SizedBox(width: 8),
+                        _buildIconAction(
+                          icon: Icons.settings_outlined,
+                          onTap: controller.openSettings,
                         ),
                       ],
                     ),
@@ -194,7 +202,7 @@ class HomeScreen extends GetView<HomeController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Habari,',
+                            'home_greeting'.tr,
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.65),
                               fontSize: 13,
@@ -250,6 +258,52 @@ class HomeScreen extends GetView<HomeController> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
+                              const SizedBox(width: 8),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () => Get.toNamed(Routes.profile),
+                                  child: Container(
+                                    constraints: const BoxConstraints(
+                                      minHeight: 44,
+                                      minWidth: 44,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.white
+                                            .withValues(alpha: 0.65),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(
+                                          Icons.person_outline_rounded,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'profile_title'.tr,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -299,12 +353,12 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                 ),
                 const SizedBox(width: 14),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Verify Land',
+                       Text(
+                        'home_verify_land'.tr,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
@@ -313,7 +367,7 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                       SizedBox(height: 2),
                       Text(
-                        'Check before you buy',
+                        'home_check_before_buy'.tr,
                         style: TextStyle(
                           fontSize: 13,
                           color: Color(0xFF9E9E9E),
@@ -340,11 +394,11 @@ class HomeScreen extends GetView<HomeController> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Start Verification',
+                      'home_start_verification'.tr,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -364,35 +418,81 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildStepFlow() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 360) {
-          return Wrap(
-            spacing: 12,
-            runSpacing: 10,
-            alignment: WrapAlignment.center,
-            children: const [
-              _MiniStep(label: 'Plot', icon: Icons.search_rounded),
-              _MiniStep(label: 'GPS', icon: Icons.gps_fixed_rounded),
-              _MiniStep(label: 'NIDA', icon: Icons.badge_rounded),
-              _MiniStep(label: 'AI', icon: Icons.psychology_rounded),
-            ],
-          );
-        }
+    return Row(
+      children: [
+        Expanded(child: _MiniStep(label: 'home_step_plot'.tr, icon: Icons.description_rounded)),
+        Expanded(child: _MiniStep(label: 'home_step_gps'.tr, icon: Icons.my_location_rounded)),
+        Expanded(child: _MiniStep(label: 'home_step_nida'.tr, icon: Icons.fingerprint_rounded)),
+        Expanded(child: _MiniStep(label: 'home_step_alerts'.tr, icon: Icons.notifications_active_rounded)),
+      ],
+    );
+  }
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const [
-            _MiniStep(label: 'Plot', icon: Icons.search_rounded),
-            _StepArrow(),
-            _MiniStep(label: 'GPS', icon: Icons.gps_fixed_rounded),
-            _StepArrow(),
-            _MiniStep(label: 'NIDA', icon: Icons.badge_rounded),
-            _StepArrow(),
-            _MiniStep(label: 'AI', icon: Icons.psychology_rounded),
-          ],
-        );
-      },
+  Widget _buildBuyerTools() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'buyer_workspace'.tr,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1A1A1A),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'buyer_workspace_hint'.tr,
+            style: const TextStyle(fontSize: 13, color: Color(0xFF9E9E9E)),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _BuyerToolTile(
+                  icon: Icons.fact_check_outlined,
+                  title: 'buyer_check_docs'.tr,
+                  subtitle: 'buyer_check_docs_hint'.tr,
+                  onTap: controller.openDocuments,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _BuyerToolTile(
+                  icon: Icons.handshake_outlined,
+                  title: 'buyer_interest'.tr,
+                  subtitle: 'buyer_interest_hint'.tr,
+                  onTap: controller.openBuyerInterests,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _BuyerToolTile(
+                  icon: Icons.fingerprint_rounded,
+                  title: 'buyer_certificates'.tr,
+                  subtitle: 'buyer_certificates_hint'.tr,
+                  onTap: controller.openCertificates,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _BuyerToolTile(
+                  icon: Icons.notifications_outlined,
+                  title: 'seller_alerts'.tr,
+                  subtitle: 'buyer_alerts_hint'.tr,
+                  onTap: () => Get.toNamed(Routes.notifications),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -403,7 +503,7 @@ class HomeScreen extends GetView<HomeController> {
         children: [
           Expanded(
             child: _SummaryCard(
-              label: 'Total',
+              label: 'home_summary_total'.tr,
               value: '${summary.total}',
               icon: Icons.inventory_2_outlined,
             ),
@@ -411,7 +511,7 @@ class HomeScreen extends GetView<HomeController> {
           const SizedBox(width: 10),
           Expanded(
             child: _SummaryCard(
-              label: 'Safe',
+              label: 'home_summary_safe'.tr,
               value: '${summary.safeCount}',
               icon: Icons.check_circle_outline_rounded,
               accent: const Color(0xFF1A6B4A),
@@ -420,7 +520,7 @@ class HomeScreen extends GetView<HomeController> {
           const SizedBox(width: 10),
           Expanded(
             child: _SummaryCard(
-              label: 'Avg Risk',
+              label: 'home_summary_avg_risk'.tr,
               value: '${summary.averageRisk}%',
               icon: Icons.analytics_outlined,
               accent: const Color(0xFFB45309),
@@ -462,8 +562,8 @@ class HomeScreen extends GetView<HomeController> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'No Verifications Yet',
+            Text(
+              'home_empty_title'.tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -471,8 +571,8 @@ class HomeScreen extends GetView<HomeController> {
               ),
             ),
             const SizedBox(height: 6),
-            const Text(
-              'Your land verification history will appear here.',
+            Text(
+              'home_empty_subtitle'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -488,15 +588,23 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildHistoryCard(Map<String, dynamic> item) {
     final risk = _parseRisk(item['risk_score']);
-    final verdictText = _safeText(item['verdict'], fallback: '-').toUpperCase();
+    final verdictText = _safeText(item['verdict'], fallback: '-');
     final type = _safeText(item['type'], fallback: '-');
     final plotRef = _safeText(item['plot_reference'], fallback: '-');
     final displayTime = _formatTimestamp(item['timestamp']);
-    final verdict = _resolveVerdict(verdictText: verdictText, type: type, risk: risk);
+    final verdict = VerdictStyle.from(
+      verdictText: verdictText,
+      riskScore: risk,
+    );
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-      child: Container(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () => Get.toNamed(Routes.historyDetail, arguments: item),
+          child: Ink(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -574,8 +682,8 @@ class HomeScreen extends GetView<HomeController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Risk Score',
+                    Text(
+                      'common_risk_score'.tr,
                       style: TextStyle(
                         fontSize: 12,
                         color: Color(0xFF9E9E9E),
@@ -623,9 +731,19 @@ class HomeScreen extends GetView<HomeController> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                Text(
+                  'history_tap_hint'.tr,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF0A3D2E),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ],
+        ),
+      ),
         ),
       ),
     );
@@ -665,6 +783,61 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
+  Widget _buildNotificationBell() {
+    final notifController = Get.find<NotificationController>();
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => Get.toNamed(Routes.notifications),
+        borderRadius: BorderRadius.circular(12),
+        child: Ink(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Obx(() {
+              final count = notifController.unreadCount.value;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(
+                    Icons.notifications_outlined,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  if (count > 0)
+                    Positioned(
+                      top: -4,
+                      right: -4,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFD4AF37),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          count > 9 ? '9+' : '$count',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
   int _parseRisk(dynamic raw) {
     final parsed = int.tryParse(raw?.toString() ?? '') ?? 0;
     return parsed.clamp(0, 100);
@@ -678,9 +851,9 @@ class HomeScreen extends GetView<HomeController> {
   String _formatType(String type) {
     switch (type.trim().toLowerCase()) {
       case 'success':
-        return 'Verification passed';
+        return 'common_verification_passed'.tr;
       case 'blocked':
-        return 'Verification blocked';
+        return 'common_verification_blocked'.tr;
       default:
         return type;
     }
@@ -689,7 +862,7 @@ class HomeScreen extends GetView<HomeController> {
   String _formatTimestamp(dynamic raw) {
     final source = raw?.toString().trim() ?? '';
     if (source.isEmpty) {
-      return 'Unknown time';
+      return 'common_unknown_time'.tr;
     }
 
     final parsed = DateTime.tryParse(source);
@@ -705,65 +878,25 @@ class HomeScreen extends GetView<HomeController> {
     return '$month ${local.day}, ${local.year} - $hour:$minute $suffix';
   }
 
-  _VerdictStyle _resolveVerdict({
-    required String verdictText,
-    required String type,
-    required int risk,
-  }) {
-    final normalized = verdictText.toLowerCase();
-    final typeNormalized = type.toLowerCase();
-
-    if (normalized.contains('safe') ||
-        normalized.contains('pass') ||
-        normalized.contains('clear')) {
-      return const _VerdictStyle.safe();
-    }
-
-    if (normalized.contains('caution') ||
-        normalized.contains('review') ||
-        normalized.contains('manual')) {
-      return const _VerdictStyle.caution();
-    }
-
-    if (normalized.contains('block') ||
-        normalized.contains('reject') ||
-        normalized.contains('fail') ||
-        normalized.contains('fraud')) {
-      return const _VerdictStyle.blocked();
-    }
-
-    if (typeNormalized == 'blocked') {
-      return const _VerdictStyle.blocked();
-    }
-
-    if (risk <= 30) {
-      return const _VerdictStyle.safe();
-    }
-    if (risk <= 70) {
-      return const _VerdictStyle.caution();
-    }
-    return const _VerdictStyle.blocked();
-  }
-
   String _monthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+    const monthKeys = [
+      'date_jan',
+      'date_feb',
+      'date_mar',
+      'date_apr',
+      'date_may',
+      'date_jun',
+      'date_jul',
+      'date_aug',
+      'date_sep',
+      'date_oct',
+      'date_nov',
+      'date_dec',
     ];
     if (month < 1 || month > 12) {
-      return 'Unknown';
+      return 'common_unknown'.tr;
     }
-    return months[month - 1];
+    return monthKeys[month - 1].tr;
   }
 }
 
@@ -778,21 +911,25 @@ class _MiniStep extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 40,
-          height: 40,
+          width: 44,
+          height: 44,
           decoration: BoxDecoration(
             color: const Color(0xFF0A3D2E).withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: const Color(0xFF0A3D2E).withValues(alpha: 0.06),
+            ),
           ),
-          child: Icon(icon, color: const Color(0xFF0A3D2E), size: 18),
+          child: Icon(icon, color: const Color(0xFF0A3D2E), size: 20),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(
           label,
           style: const TextStyle(
-            fontSize: 10,
-            color: Color(0xFF9E9E9E),
+            fontSize: 11,
+            color: Color(0xFF757575),
             fontWeight: FontWeight.w600,
+            letterSpacing: 0.2,
           ),
         ),
       ],
@@ -800,17 +937,66 @@ class _MiniStep extends StatelessWidget {
   }
 }
 
-class _StepArrow extends StatelessWidget {
-  const _StepArrow();
+class _BuyerToolTile extends StatelessWidget {
+  const _BuyerToolTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: 16),
-      child: Icon(
-        Icons.arrow_forward_ios_rounded,
-        size: 10,
-        color: Color(0xFFD4AF37),
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          height: 118,
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: const Color(0xFF0A3D2E), size: 22),
+              const Spacer(),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1A1A1A),
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF9E9E9E),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -905,10 +1091,11 @@ class _HistorySummary {
     var riskSum = 0;
 
     for (final item in history) {
-      final verdict = (item['verdict']?.toString() ?? '').toLowerCase();
-      if (verdict.contains('safe') ||
-          verdict.contains('pass') ||
-          verdict.contains('clear')) {
+      final style = VerdictStyle.from(
+        verdictText: item['verdict']?.toString(),
+        riskScore: int.tryParse(item['risk_score']?.toString() ?? ''),
+      );
+      if (style.code == 'SAFE') {
         safe += 1;
       }
 
@@ -923,42 +1110,4 @@ class _HistorySummary {
       averageRisk: avg.clamp(0, 100),
     );
   }
-}
-
-class _VerdictStyle {
-  const _VerdictStyle({
-    required this.label,
-    required this.color,
-    required this.background,
-    required this.icon,
-  });
-
-  const _VerdictStyle.safe()
-    : this(
-        label: 'SAFE',
-        color: const Color(0xFF1A6B4A),
-        background: const Color(0xFFECFDF5),
-        icon: Icons.check_circle_rounded,
-      );
-
-  const _VerdictStyle.caution()
-    : this(
-        label: 'CAUTION',
-        color: const Color(0xFFF59E0B),
-        background: const Color(0xFFFFFBEB),
-        icon: Icons.warning_rounded,
-      );
-
-  const _VerdictStyle.blocked()
-    : this(
-        label: 'BLOCKED',
-        color: const Color(0xFFDC2626),
-        background: const Color(0xFFFEF2F2),
-        icon: Icons.cancel_rounded,
-      );
-
-  final String label;
-  final Color color;
-  final Color background;
-  final IconData icon;
 }

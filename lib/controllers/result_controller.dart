@@ -5,17 +5,24 @@ import '../core/api_exception.dart';
 import '../core/storage_service.dart';
 import '../models/assistant_explanation.dart';
 import '../models/verification_outcome.dart';
+import '../models/verification_result.dart';
+import '../routes/app_routes.dart';
 import '../services/assistant_service.dart';
 import '../services/history_service.dart';
+import '../services/interest_service.dart';
+import 'certificate_controller.dart';
 
 class ResultController extends GetxController {
   final HistoryService _historyService = Get.find<HistoryService>();
   final StorageService _storage = Get.find<StorageService>();
   final AssistantService _assistantService = Get.find<AssistantService>();
+  final InterestService _interestService = Get.find<InterestService>();
 
   final outcome = Rxn<VerificationOutcome>();
   final isAssistantOpen = false.obs;
   final isAssistantLoading = false.obs;
+  final isRecoveringCertificate = false.obs;
+  final isSendingInterest = false.obs;
   final assistantError = RxnString();
   final chatMessages = <AssistantChatMessage>[].obs;
   late final TextEditingController questionController;
@@ -28,6 +35,75 @@ class ResultController extends GetxController {
     outcome.value = args is VerificationOutcome ? args : null;
     questionController = TextEditingController();
     chatScrollController = ScrollController();
+    _recoverCertificateIfNeeded();
+  }
+
+  Future<void> _recoverCertificateIfNeeded() async {
+    final result = outcome.value?.success;
+    if (result == null) return;
+
+    final verdict = result.assessment.verdict.toUpperCase();
+    final eligible = result.certificateEligible ||
+        (result.steps.nidaQuestionsPassed &&
+            (verdict == 'SAFE' || verdict == 'CAUTION'));
+
+    if (!eligible || result.certificate != null) {
+      return;
+    }
+
+    await recoverCertificate();
+  }
+
+  Future<void> recoverCertificate() async {
+    final result = outcome.value?.success;
+    if (result == null || result.verificationLogId <= 0) return;
+    if (!Get.isRegistered<CertificateController>()) return;
+
+    isRecoveringCertificate.value = true;
+    try {
+      final cert = await Get.find<CertificateController>()
+          .generateCertificate(result.verificationLogId);
+      if (cert == null) return;
+
+      final updated = result.copyWith(
+        certificate: VerificationCertificateSummary(
+          id: cert.id,
+          certificateNumber: cert.certificateNumber,
+          issuedAt: cert.issuedAt,
+          fingerprint: cert.fingerprint,
+          downloadAvailable: cert.pdfPath != null && cert.pdfPath!.isNotEmpty,
+        ),
+        certificateEligible: true,
+        certificateError: null,
+      );
+      outcome.value = VerificationOutcome.success(updated);
+      await _historyService.addHistory(updated.toHistoryJson());
+    } finally {
+      isRecoveringCertificate.value = false;
+    }
+  }
+
+  Future<void> expressInterest() async {
+    final result = outcome.value?.success;
+    if (result == null) return;
+
+    isSendingInterest.value = true;
+    try {
+      await _interestService.expressInterest(
+        plotReference: result.plotReference,
+        message: 'interest_default_message'.tr,
+        verificationLogId: result.verificationLogId,
+      );
+      Get.snackbar('interest_title'.tr, 'interest_sent'.tr);
+      Get.toNamed(
+        Routes.buyerInterests,
+        arguments: {'plot_reference': result.plotReference},
+      );
+    } on ApiException catch (e) {
+      Get.snackbar('common_error'.tr, e.message);
+    } finally {
+      isSendingInterest.value = false;
+    }
   }
 
   String? passportImageUrl() {
@@ -56,6 +132,7 @@ class ResultController extends GetxController {
   }
 
   Future<void> startNew() async {
+    await _storage.clearVerificationSession();
     Get.offAllNamed('/plot');
   }
 
@@ -81,9 +158,7 @@ class ResultController extends GetxController {
   }
 
   String defaultQuestion() {
-    return _storage.languageCode == 'sw'
-        ? 'Naomba ufafanuzi wa kina wa matokeo haya kwa mnunuzi.'
-        : 'Please explain this result in detail for a buyer.';
+    return 'chat_default_question'.tr;
   }
 
   Future<void> askForUnderstanding(String question) async {
@@ -139,22 +214,16 @@ class ResultController extends GetxController {
       chatMessages.add(
         AssistantChatMessage(
           role: 'assistant',
-          text: _storage.languageCode == 'sw'
-              ? 'Samahani, nimekwama kujibu swali hilo kwa sasa. Tafadhali jaribu tena au uliza kwa namna nyingine.'
-              : 'I could not answer that follow-up right now. Please try again or rephrase the question.',
+          text: 'chat_error_response'.tr,
         ),
       );
       _scrollChatToBottom();
     } catch (_) {
-      assistantError.value = _storage.languageCode == 'sw'
-          ? 'Hitilafu isiyotarajiwa wakati wa kupata ufafanuzi.'
-          : 'Unexpected error while getting explanation.';
+      assistantError.value = 'chat_unexpected_error'.tr;
       chatMessages.add(
         AssistantChatMessage(
           role: 'assistant',
-          text: _storage.languageCode == 'sw'
-              ? 'Huduma ya maelezo imepata hitilafu ya muda. Tafadhali jaribu tena baada ya muda mfupi.'
-              : 'The explanation service had a temporary issue. Please try again shortly.',
+          text: 'chat_service_error'.tr,
         ),
       );
       _scrollChatToBottom();
@@ -168,20 +237,11 @@ class ResultController extends GetxController {
   }
 
   List<String> quickPrompts() {
-    if (_storage.languageCode == 'sw') {
-      return const [
-        'Hii sababu ina maana gani kwa mnunuzi?',
-        'Ni nyaraka gani nihakiki kabla ya kulipa?',
-        'Ni madhara gani nikipuuzia tahadhari hizi?',
-        'Niende wapi kupata msaada rasmi wa ardhi?',
-      ];
-    }
-
-    return const [
-      'What does this risk reason mean for a buyer?',
-      'Which documents should I verify before payment?',
-      'What can happen if I ignore these warnings?',
-      'Where should I get official land help?',
+    return [
+      'chat_quick_1'.tr,
+      'chat_quick_2'.tr,
+      'chat_quick_3'.tr,
+      'chat_quick_4'.tr,
     ];
   }
 

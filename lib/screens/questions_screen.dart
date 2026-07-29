@@ -69,15 +69,15 @@ class _QuestionsScreenContentState extends State<QuestionsScreenContent>
               const SizedBox(height: 16),
               const LlBackButton(),
               const SizedBox(height: 20),
-              const LlStepBadge(label: 'STEP 4 OF 4'),
+              LlStepBadge(label: 'q_step_4_of_4'.tr),
               const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: LlTitleBlock(
-                      title: 'Security Questions',
-                      subtitle: 'Answer all questions below',
+                      title: 'q_title'.tr,
+                      subtitle: 'q_subtitle'.tr,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -102,7 +102,11 @@ class _QuestionsScreenContentState extends State<QuestionsScreenContent>
                         ),
                       ),
                       child: Text(
-                        '$remaining',
+                        (() {
+                          final m = remaining ~/ 60;
+                          final s = remaining % 60;
+                          return '$m:${s.toString().padLeft(2, '0')}';
+                        })(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
@@ -114,6 +118,81 @@ class _QuestionsScreenContentState extends State<QuestionsScreenContent>
                 ],
               ),
               const SizedBox(height: 28),
+              if (widget.controller.hasDemoAnswers) ...[
+                LlSurfaceCard(
+                  padding: const EdgeInsets.all(16),
+                  radius: 16,
+                  shadowOpacity: 0.04,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.tips_and_updates_outlined,
+                            color: AppColors.brandDeep,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'q_demo_title'.tr,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'q_demo_desc'.tr,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textMuted,
+                          height: 1.4,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ...widget.controller.questionData.questions
+                          .where((q) => (q.demoAnswer ?? '').isNotEmpty)
+                          .map(
+                            (q) => Padding(
+                              padding: const EdgeInsets.only(bottom: 6),
+                              child: Text(
+                                '• ${q.demoAnswer}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.brandDeep,
+                                ),
+                              ),
+                            ),
+                          ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 44,
+                        child: OutlinedButton.icon(
+                          onPressed: widget.controller.fillDemoAnswers,
+                          icon: const Icon(Icons.checklist_rounded, size: 18),
+                          label: Text('q_demo_fill'.tr),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.brandDeep,
+                            side: const BorderSide(color: AppColors.brand),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
               ..._buildQuestionCards(),
               const SizedBox(height: 24),
               Obx(() {
@@ -125,7 +204,7 @@ class _QuestionsScreenContentState extends State<QuestionsScreenContent>
               }),
               Obx(
                 () => LlPrimaryButton(
-                  label: 'Submit Answers',
+                  label: 'q_submit'.tr,
                   onPressed: widget.controller.submitAnswers,
                   isLoading: widget.controller.isLoading.value,
                 ),
@@ -181,7 +260,7 @@ class _QuestionsScreenContentState extends State<QuestionsScreenContent>
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      question.prompt.isNotEmpty ? question.prompt : 'Question',
+                      question.prompt.isNotEmpty ? question.prompt : 'q_fallback'.tr,
                       style: const TextStyle(
                         color: Color(0xFF424242),
                         fontSize: 15,
@@ -194,7 +273,7 @@ class _QuestionsScreenContentState extends State<QuestionsScreenContent>
               const SizedBox(height: 16),
               LlInputField(
                 controller: textController,
-                hint: 'Your answer',
+                hint: 'q_hint'.tr,
                 icon: Icons.edit_rounded,
                 textInputAction: TextInputAction.next,
               ),

@@ -71,8 +71,8 @@ class _LoginScreenContentState extends State<LoginScreenContent>
               const SizedBox(height: 20),
               const LlBackButton(),
               const SizedBox(height: 24),
-              const Text(
-                'Karibu Tena',
+              Text(
+                'login_welcome_back'.tr,
                 style: TextStyle(
                   color: AppColors.accent,
                   fontSize: 14,
@@ -81,9 +81,9 @@ class _LoginScreenContentState extends State<LoginScreenContent>
                 ),
               ),
               const SizedBox(height: 4),
-              const LlTitleBlock(
-                title: 'Sign In',
-                subtitle: 'Access your account securely',
+              LlTitleBlock(
+                title: 'login_title'.tr,
+                subtitle: 'login_subtitle'.tr,
               ),
               const SizedBox(height: 52),
               LlSurfaceCard(
@@ -92,7 +92,7 @@ class _LoginScreenContentState extends State<LoginScreenContent>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const LlFieldLabel('Email Address'),
+                    LlFieldLabel('common_email'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller: widget.controller.loginEmailController,
@@ -102,7 +102,7 @@ class _LoginScreenContentState extends State<LoginScreenContent>
                       textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 20),
-                    const LlFieldLabel('Password'),
+                    LlFieldLabel('common_password'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller: widget.controller.loginPasswordController,
@@ -125,14 +125,17 @@ class _LoginScreenContentState extends State<LoginScreenContent>
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: AppColors.brand,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                      child: GestureDetector(
+                        onTap: () => Get.toNamed(Routes.forgotPassword),
+                        child: Text(
+                          'login_forgot_password'.tr,
+                          style: TextStyle(
+                            color: AppColors.brand,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
@@ -146,7 +149,7 @@ class _LoginScreenContentState extends State<LoginScreenContent>
                     }),
                     Obx(
                       () => LlPrimaryButton(
-                        label: 'Sign In',
+                        label: 'login_title'.tr,
                         onPressed: widget.controller.login,
                         isLoading: widget.controller.isLoading.value,
                       ),
@@ -158,8 +161,8 @@ class _LoginScreenContentState extends State<LoginScreenContent>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Don't have an account? ",
+                  Text(
+                    'login_no_account'.tr,
                     style: TextStyle(
                       color: Color(0xFF757575),
                       fontSize: 14,
@@ -167,8 +170,8 @@ class _LoginScreenContentState extends State<LoginScreenContent>
                   ),
                   GestureDetector(
                     onTap: () => Get.toNamed(Routes.register),
-                    child: const Text(
-                      'Register',
+                    child: Text(
+                      'login_register'.tr,
                       style: TextStyle(
                         color: AppColors.brand,
                         fontSize: 14,

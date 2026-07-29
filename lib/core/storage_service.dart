@@ -12,6 +12,9 @@ class StorageService {
   static const String _challengeExpiresKey = 'challenge_expires_at';
   static const String _languageKey = 'language_code';
   static const String _historyKey = 'verification_history';
+  static const String _userIdKey = 'current_user_id';
+  static const String _deviceTokenKey = 'device_token';
+  static const String _lastNotifSeenKey = 'last_notif_seen_id';
 
   final Box<dynamic> _box;
 
@@ -32,7 +35,36 @@ class StorageService {
 
   bool get isAuthenticated => (authToken?.isNotEmpty ?? false);
 
-  Future<void> clearAuthToken() => _box.delete(_authTokenKey);
+  Future<void> clearAuthToken() async {
+    await _box.delete(_authTokenKey);
+    await _box.delete(_userRoleKey);
+    await _box.delete(_userIdKey);
+  }
+
+  int? get currentUserId => _box.get(_userIdKey) as int?;
+
+  Future<void> setCurrentUserId(int id) => _box.put(_userIdKey, id);
+
+  String get _userHistoryKey {
+    final uid = currentUserId;
+    return uid != null ? '${_historyKey}_$uid' : _historyKey;
+  }
+
+  static const String _userRoleKey = 'user_role';
+
+  String? get userRole {
+    final raw = (_box.get(_userRoleKey) as String?)?.trim().toLowerCase();
+    if (raw == null || raw.isEmpty) return null;
+    return raw;
+  }
+
+  Future<void> setUserRole(String role) =>
+      _box.put(_userRoleKey, role.trim().toLowerCase());
+
+  String homeRouteForRole([String? role]) {
+    final resolved = (role ?? userRole ?? 'buyer').toLowerCase();
+    return resolved == 'seller' ? '/seller-home' : '/home';
+  }
 
   String? get verificationToken => _box.get(_verificationTokenKey) as String?;
 
@@ -72,7 +104,7 @@ class StorageService {
   }
 
   List<Map<String, dynamic>> get verificationHistory {
-    final raw = _box.get(_historyKey);
+    final raw = _box.get(_userHistoryKey);
     if (raw is! List) {
       return [];
     }
@@ -91,6 +123,22 @@ class StorageService {
       list.removeRange(30, list.length);
     }
 
-    await _box.put(_historyKey, list);
+    await _box.put(_userHistoryKey, list);
   }
+
+  String? get deviceToken => _box.get(_deviceTokenKey) as String?;
+
+  Future<void> setDeviceToken(String value) =>
+      _box.put(_deviceTokenKey, value.trim());
+
+  String get _userNotifSeenKey {
+    final uid = currentUserId;
+    return uid != null ? '${_lastNotifSeenKey}_$uid' : _lastNotifSeenKey;
+  }
+
+  int get lastNotificationSeenId =>
+      (_box.get(_userNotifSeenKey) as int?) ?? 0;
+
+  Future<void> setLastNotificationSeenId(int value) =>
+      _box.put(_userNotifSeenKey, value);
 }

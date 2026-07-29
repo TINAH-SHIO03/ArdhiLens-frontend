@@ -41,8 +41,10 @@ class OwnerLinkFailureResult {
       'verification_log_id': verificationLogId,
       'message': message,
       'verdict': assessment.verdict,
+      'verdict_label': assessment.verdictLabel,
       'risk_score': assessment.riskScore,
       'recommendation': assessment.recommendation,
+      'reasons': assessment.reasons,
     };
   }
 }

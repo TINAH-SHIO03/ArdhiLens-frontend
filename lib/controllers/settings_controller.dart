@@ -1,72 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../core/api_exception.dart';
 import '../core/storage_service.dart';
+import '../routes/app_routes.dart';
+import '../services/auth_service.dart';
+import 'notification_controller.dart';
 
 class SettingsController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
+  final AuthService _authService = Get.find<AuthService>();
 
-  late final TextEditingController baseUrlController;
   final selectedLanguage = 'en'.obs;
   final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    baseUrlController = TextEditingController(text: _storage.baseUrl ?? '');
     selectedLanguage.value = _storage.languageCode;
   }
 
-  Future<void> saveSettings() async {
-    final baseUrl = baseUrlController.text.trim();
+  Future<void> setLanguage(String? value) async {
+    if (value == null || value.isEmpty) return;
+    final lang = value == 'sw' ? 'sw' : 'en';
+    selectedLanguage.value = lang;
+    await _storage.setLanguageCode(lang);
+    await Get.updateLocale(Locale(lang));
+  }
 
-    if (baseUrl.isEmpty) {
-      Get.snackbar('Missing field', 'Base URL is required.');
-      return;
-    }
-
+  Future<void> logout() async {
     isLoading.value = true;
-
     try {
-      final oldBaseUrl = _storage.baseUrl;
-      final changedBaseUrl = oldBaseUrl != null && oldBaseUrl.trim() != baseUrl;
-
-      await _storage.setBaseUrl(baseUrl);
-      await _storage.setLanguageCode(selectedLanguage.value);
-
-      if (changedBaseUrl) {
-        await _storage.clearAuthToken();
-        await _storage.clearVerificationSession();
-        Get.offAllNamed('/login');
-        return;
-      }
-
-      if (_storage.isAuthenticated) {
-        Get.offAllNamed('/home');
-      } else {
-        Get.offAllNamed('/login');
-      }
-    } on ApiException catch (error) {
-      Get.snackbar('Save failed', error.message);
+      await _authService.logout();
     } catch (_) {
-      Get.snackbar('Save failed', 'Unexpected error while saving settings.');
+      await _storage.clearAuthToken();
+      await _storage.clearVerificationSession();
     } finally {
       isLoading.value = false;
     }
-  }
-
-  void setLanguage(String? value) {
-    if (value == null || value.isEmpty) {
-      return;
+    if (Get.isRegistered<NotificationController>()) {
+      Get.find<NotificationController>().onLoggedOut();
     }
-
-    selectedLanguage.value = value == 'sw' ? 'sw' : 'en';
-  }
-
-  @override
-  void onClose() {
-    baseUrlController.dispose();
-    super.onClose();
+    Get.offAllNamed(Routes.login);
   }
 }

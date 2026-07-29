@@ -17,13 +17,19 @@ class NinController extends GetxController {
     final nin = ninController.text.trim();
 
     if (nin.isEmpty) {
-      errorMessage.value = 'NIN is required.';
+      errorMessage.value = 'err_nin_required'.tr;
+      return;
+    }
+
+    final ninPattern = RegExp(r'^\d{8}-\d{5}-\d{5}$');
+    if (!ninPattern.hasMatch(nin)) {
+      errorMessage.value = 'err_nin_format'.tr;
       return;
     }
 
     final verificationToken = _storage.verificationToken;
     if (verificationToken == null || verificationToken.isEmpty) {
-      errorMessage.value = 'Verification session missing. Start again.';
+      errorMessage.value = 'err_session_missing'.tr;
       return;
     }
 
@@ -45,7 +51,7 @@ class NinController extends GetxController {
       }
       errorMessage.value = error.message;
     } catch (_) {
-      errorMessage.value = 'Unexpected error while generating questions.';
+      errorMessage.value = 'err_nin_unexpected'.tr;
     } finally {
       isLoading.value = false;
     }

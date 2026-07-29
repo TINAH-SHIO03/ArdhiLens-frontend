@@ -1,0 +1,491 @@
+const Map<String, String> appEn = {
+  // Common
+  'common_email': 'Email Address',
+  'common_password': 'Password',
+  'common_full_name': 'Full Name',
+  'common_cancel': 'Cancel',
+  'common_delete': 'Delete',
+  'common_ok': 'OK',
+  'common_na': 'N/A',
+  'common_user': 'User',
+  'common_buyer': 'Buyer',
+  'common_seller': 'Seller',
+  'common_pass': 'PASS',
+  'common_fail': 'FAIL',
+  'common_risk_score': 'Risk Score',
+  'common_verification_passed': 'Verification passed',
+  'common_verification_blocked': 'Verification blocked',
+  'common_unknown': 'Unknown',
+  'common_unknown_time': 'Unknown time',
+  'common_error': 'Error',
+  'common_brand': 'ArdhiLens',
+
+  // Validation / controller messages
+  'err_email_password_required': 'Email and password are required.',
+  'err_login_failed': 'Login failed: :error',
+  'err_register_required': 'Name, email, and passwords are required.',
+  'err_passwords_mismatch': 'Passwords do not match.',
+  'err_register_failed': 'Registration failed: :error',
+  'err_plot_required': 'Plot reference is required.',
+  'err_plot_unexpected': 'Unexpected error while finding plot.',
+  'err_nin_required': 'NIN is required.',
+  'err_nin_length': 'NIN must be exactly 20 characters (e.g., 19901215-25555-00001).',
+  'err_nin_format': 'NIN must match format YYYYMMDD-#####-##### (e.g., 19901215-25555-00001).',
+  'err_session_missing': 'Verification session missing. Start again.',
+  'err_nin_unexpected': 'Unexpected error while generating questions.',
+  'err_challenge_expired': 'Challenge expired. Generate new questions.',
+  'err_answer_all': 'Please answer all questions.',
+  'err_answers_unexpected': 'Unexpected error while submitting answers.',
+  'err_auth_required': 'Authentication required.',
+
+  // Verdicts
+  'verdict_safe': 'SAFE',
+  'verdict_caution': 'CAUTION',
+  'verdict_blocked': 'BLOCKED',
+  'verdict_do_not_buy': 'DO NOT BUY',
+
+  // Landing
+  'landing_tagline': 'Tanzania Land Verification',
+  'landing_hero_title': 'Verify Your Land\nBefore You Buy',
+  'landing_hero_subtitle': 'Protect yourself before you pay',
+  'landing_hero_description':
+      'Protect yourself from land fraud. Verify ownership, legal status, and authenticity before making any transaction.',
+  'landing_step_gps': 'GPS',
+  'landing_step_nida': 'NIDA',
+  'landing_step_alerts': 'Alerts',
+  'landing_get_started': 'Get Started',
+  'landing_has_account': 'I Already Have an Account',
+
+  // Login
+  'login_welcome_back': 'Welcome Back',
+  'login_title': 'Sign In',
+  'login_subtitle': 'Access your account securely',
+  'login_forgot_password': 'Forgot Password?',
+  'login_no_account': "Don't have an account? ",
+  'login_register': 'Register',
+
+  // Register
+  'register_tagline': 'Learn to verify land',
+  'register_title': 'Create Account',
+  'register_subtitle': 'Set up your verification profile',
+  'register_phone_optional': 'Phone Number (optional)',
+  'register_i_am_a': 'I am a',
+  'register_confirm_password': 'Confirm Password',
+  'register_has_account': 'Already have an account? ',
+
+  // Home
+  'home_greeting': 'Hello,',
+  'home_verify_land': 'Verify Land',
+  'home_check_before_buy': 'Check before you buy',
+  'home_start_verification': 'Start Verification',
+  'home_step_plot': 'Plot',
+  'home_step_gps': 'GPS',
+  'home_step_nida': 'NIDA',
+  'home_step_alerts': 'Alerts',
+  'home_summary_total': 'Total',
+  'home_summary_safe': 'Safe',
+  'home_summary_avg_risk': 'Avg Risk',
+  'home_recent_verifications': 'Recent Verifications',
+  'home_total_count': ':count total',
+  'home_empty_title': 'No Verifications Yet',
+  'home_empty_subtitle':
+      'Your land verification history will appear here.',
+  'home_logout': 'Log out',
+  'home_logout_title': 'Log out?',
+  'home_logout_confirm': 'Are you sure you want to log out of ArdhiLens?',
+  'history_tap_hint': 'View',
+  'history_detail_title': 'Verification Details',
+  'history_when': 'When',
+  'history_log_id': 'Log ID',
+
+  // Plot
+  'plot_step_1_of_4': 'STEP 1 OF 4',
+  'plot_title': 'Find Your Plot',
+  'plot_subtitle': 'Enter your plot reference number',
+  'plot_reference': 'Plot Reference',
+  'plot_reference_hint': 'e.g., PLOT-001',
+  'plot_find': 'Find Plot',
+
+  // GPS
+  'gps_step_2_of_4': 'STEP 2 OF 4',
+  'gps_title': 'Confirm Plot Location',
+  'gps_subtitle':
+      'Verify any registered plot remotely. Phone GPS is optional for an on-site badge.',
+  'gps_coordinates': 'Plot coordinates',
+  'gps_latitude': 'Latitude',
+  'gps_lat_hint': 'e.g., -6.8012',
+  'gps_longitude': 'Longitude',
+  'gps_lng_hint': 'e.g., 39.2021',
+  'gps_verify': 'Continue verification',
+  'gps_not_recorded': 'Plot GPS not recorded',
+  'gps_demo_title': 'Demo Simulation',
+  'gps_demo_desc':
+      'Simulate GPS positions for class demonstration. The green circle shows the 250m verification zone.',
+  'gps_sim_nearby': 'Simulate Nearby',
+  'gps_sim_nearby_sub': 'Within 250m',
+  'gps_sim_far': 'Simulate Far',
+  'gps_sim_far_sub': 'Outside 250m',
+  'gps_use_device_title': 'Optional: I am at the plot',
+  'gps_use_device_desc':
+      'Use your phone GPS to earn an on-site badge. You can still verify from anywhere without this.',
+  'gps_use_device_btn': 'Use My Current Location',
+  'gps_use_plot_btn': 'Use Registered Plot Location',
+  'gps_location_disabled': 'Location services are disabled on this device.',
+  'gps_location_denied': 'Location permission was denied.',
+  'gps_location_denied_forever':
+      'Location permission is permanently denied. Enable it in system settings.',
+  'gps_location_failed': 'Could not read your current GPS location.',
+  'gps_coords_invalid': 'Enter valid latitude and longitude.',
+  'gps_session_missing': 'Verification session missing. Start again from plot lookup.',
+  'gps_move_closer': 'Move closer to the registered plot location.',
+  'gps_unexpected_error': 'Unexpected GPS verification error. Try again.',
+  'gps_mode_remote_title': 'Remote check',
+  'gps_mode_remote_body':
+      'Plot verified remotely. Continuing without requiring you to be on-site.',
+  'gps_mode_on_site_title': 'On-site verified',
+  'gps_mode_on_site_body':
+      'Your location matches the registered plot area.',
+
+  // NIN
+  'nin_step_3_of_4': 'STEP 3 OF 4',
+  'nin_title': 'Identity Verification',
+  'nin_subtitle':
+      'Enter any valid NIDA number (format YYYYMMDD-#####-#####). It is stored with this verification.',
+  'nin_disclaimer':
+      'Your NIN is used only for verification and never stored as a permanent plot owner link.',
+  'nin_label': 'National ID Number (NIDA)',
+  'nin_hint': '19901215-25555-00001',
+  'nin_generate': 'Generate Questions',
+  'nin_demo_map':
+      'Demo NINs (any plot): 19901215-25555-00001 · 19750310-25555-00003 · 19920822-25555-00004 · 19811105-25555-00005',
+
+  // Questions
+  'q_step_4_of_4': 'STEP 4 OF 4',
+  'q_title': 'Security Questions',
+  'q_subtitle': 'Answers must match the NIDA record for the NIN you entered',
+  'q_submit': 'Submit Answers',
+  'q_fallback': 'Question',
+  'q_hint': 'Enter exact value as on your NIDA record',
+  'q_demo_title': 'Demo answers for this NIN',
+  'q_demo_desc':
+      'These values come from the seeded NIDA profile linked to the number you entered. Tap fill, then submit.',
+  'q_demo_fill': 'Fill demo answers',
+
+  // Result
+  'result_loading': 'Loading result...',
+  'result_passed': 'Verification Passed',
+  'result_completed': 'Verification Completed',
+  'result_blocked': 'Verification Blocked',
+  'result_identity_info': 'Identity Information',
+  'result_gender': 'Gender',
+  'result_nin': 'NIN',
+  'result_nida_failed':
+      'NIDA identity verification was not passed. The result is based on other verification steps only.',
+  'result_id_photo': 'ID Photograph',
+  'result_image_unavailable': 'Image unavailable',
+  'result_risk_assessment': 'Risk Assessment',
+  'result_recommendation': 'Recommendation',
+  'result_reasons': 'Verification Reasons',
+  'result_start_new': 'Start New Verification',
+  'result_steps': 'Verification Steps',
+  'result_step_plot_found': 'Plot Found',
+  'result_step_gps': 'GPS Verification',
+  'result_step_nida': 'NIDA Identity Check',
+  'result_step_owner': 'Owner Link Check',
+  'result_certificate': 'Verification Certificate',
+  'result_cert_number': 'Certificate No.',
+  'result_issued': 'Issued',
+  'result_view_cert': 'View Certificate',
+  'result_owner_link': 'Owner Link',
+  'result_owner_link_buyer_hint':
+      'Owner Link checks whether your NIN matches the plot\'s registered owner. As a buyer, "No" is normal — you are verifying someone else\'s land, not proving you own it.',
+  'result_owner_link_seller_hint':
+      'Owner Link failed. On Seller Home, submit KYC with the NIN registered as owner of this plot, then re-run ownership proof using that same NIN in Step 3.',
+  'result_plot_owner_match': 'Plot Owner Match',
+  'result_history_match': 'History Match',
+  'result_yes': 'Yes',
+  'result_no': 'No',
+  'result_block_reasons': 'Reasons for Block',
+  'result_assistant': 'Land Assistant',
+  'result_assistant_desc':
+      'Get clearer explanations about your verification result from our AI assistant.',
+  'result_ref_log': 'Reference log: :id',
+  'result_assistant_unavailable': 'Assistant unavailable for this result.',
+  'result_open_chat': 'Open Chat',
+
+  // Chat
+  'chat_title': 'Land Assistant',
+  'chat_fallback_title': 'Chat',
+  'chat_ref_log': 'Reference log: :id',
+  'chat_unavailable_title': 'Assistant Unavailable',
+  'chat_unavailable_desc':
+      'This conversation is not available. Complete a verification first.',
+  'chat_empty_title': 'Start a conversation',
+  'chat_empty_desc':
+      'Ask questions about your verification result and get AI-powered explanations.',
+  'chat_thinking': 'Assistant is thinking...',
+  'chat_input_hint': 'Ask a follow-up question...',
+  'chat_assistant_label': 'Assistant',
+  'chat_out_of_scope': 'Outside verification scope',
+  'chat_recommended': 'Recommended: :action',
+  'chat_default_question': 'Please explain this result in detail for a buyer.',
+  'chat_default_question_sw':
+      'Naomba ufafanuzi wa kina wa matokeo haya kwa mnunuzi.',
+  'chat_error_response':
+      'I could not answer that follow-up right now. Please try again or rephrase the question.',
+  'chat_error_response_sw':
+      'Samahani, nimekwama kujibu swali hilo kwa sasa. Tafadhali jaribu tena au uliza kwa namna nyingine.',
+  'chat_unexpected_error':
+      'Unexpected error while getting explanation.',
+  'chat_unexpected_error_sw':
+      'Hitilafu isiyotarajiwa wakati wa kupata ufafanuzi.',
+  'chat_service_error':
+      'The explanation service had a temporary issue. Please try again shortly.',
+  'chat_service_error_sw':
+      'Huduma ya maelezo imepata hitilafu ya muda. Tafadhali jaribu tena baada ya muda mfupi.',
+  'chat_quick_1': 'What does this risk reason mean for a buyer?',
+  'chat_quick_2': 'Which documents should I verify before payment?',
+  'chat_quick_3': 'What can happen if I ignore these warnings?',
+  'chat_quick_4': 'Where should I get official land help?',
+  'chat_quick_1_sw': 'Hii sababu ina maana gani kwa mnunuzi?',
+  'chat_quick_2_sw': 'Nyaraka gani nihakiki kabla ya kulipa?',
+  'chat_quick_3_sw': 'Madhara gani nikipuuzia tahadhari hizi?',
+  'chat_quick_4_sw': 'Niende wapi kupata msaada rasmi wa ardhi?',
+
+  // Notifications
+  'notif_title': 'Notifications',
+  'notif_mark_all_read': 'Mark all read',
+  'notif_empty_title': 'No Notifications',
+  'notif_empty_desc':
+      "You're all caught up! Notifications about your land verifications will appear here.",
+  'notif_delete_title': 'Delete Notification',
+  'notif_delete_confirm':
+      'Are you sure you want to delete this notification?',
+  'notif_just_now': 'Just now',
+  'notif_minutes_ago': ':count min ago',
+  'notif_hours_ago': ':count hour(s) ago',
+  'notif_days_ago': ':count day(s) ago',
+  'notif_weeks_ago': ':count week(s) ago',
+  'notif_months_ago': ':count month(s) ago',
+
+  // Certificates
+  'cert_title': 'Verification Certificates',
+  'cert_yours': 'Your Certificates',
+  'cert_total_count': ':count total',
+  'cert_plot_label': 'Plot: :ref',
+  'cert_expired': 'EXPIRED',
+  'cert_expired_badge': 'Expired',
+  'cert_download': 'Download PDF',
+  'cert_view': 'View in app',
+  'cert_downloading': 'Downloading...',
+  'cert_view_failed': 'Could not open the certificate in the app.',
+  'cert_open_failed': 'Could not open the saved certificate file.',
+  'cert_saved_to': 'Saved to :path',
+  'cert_email_copy_hint': 'A copy is also emailed to your account address.',
+  'cert_download_failed': 'Could not download the certificate PDF.',
+  'cert_open_saved': 'Saved to :path',
+  'cert_download_endpoint': 'Download endpoint: :url',
+  'cert_empty_title': 'No Certificates Yet',
+  'cert_empty_desc':
+      'No certificates yet. Complete a land verification to receive a certificate.',
+
+  // Documents
+  'docs_title': 'Documents',
+  'docs_subtitle': 'Upload and manage land transaction files',
+  'docs_subtitle_seller':
+      'Choose a plot, then upload ownership and sale documents for that plot only.',
+  'docs_subtitle_buyer':
+      'Enter a plot reference to view seller documents (view only).',
+  'docs_upload_section': 'Upload Document',
+  'docs_type_label': 'Document type',
+  'docs_upload_btn': 'Choose File & Upload',
+  'docs_list_title': 'Your Documents',
+  'docs_list_title_buyer': 'Seller Documents',
+  'docs_empty_title': 'No Documents Yet',
+  'docs_empty_desc':
+      'Upload sale agreements, title deeds, survey plans, or ID copies here.',
+  'docs_empty_desc_seller':
+      'Select a linked plot above, then upload title, survey, or sale documents.',
+  'docs_empty_desc_buyer':
+      'Enter a plot reference (e.g. PLOT-001) to review seller documents before buying.',
+  'docs_open': 'Open',
+  'docs_view_only': 'View',
+  'docs_view_plot_docs': 'View Plot Documents',
+  'docs_select_plot': 'Select a plot before uploading.',
+  'docs_select_plot_hint':
+      'Documents must be attached to one of your linked plots.',
+  'docs_plot_label': 'Plot',
+  'docs_no_linked_plots':
+      'No plots linked yet. Complete seller KYC with your owner NIN first.',
+  'docs_seller_only': 'Only sellers can upload plot documents.',
+  'docs_buyer_lookup_title': 'Look up plot documents',
+  'docs_buyer_lookup_hint':
+      'View-only access helps you confirm the seller shared legal papers for this land.',
+  'docs_uploaded_title': 'Uploaded',
+  'docs_uploaded_body': 'Document saved for the selected plot.',
+  'docs_upload_failed': 'Document upload failed.',
+  'docs_pick_failed': 'Could not read the selected file.',
+  'docs_open_failed': 'Could not open the document.',
+  'docs_type_sale_agreement': 'Sale Agreement',
+  'docs_type_transfer_form': 'Transfer Form',
+  'docs_type_certificate_of_occupancy': 'Certificate of Occupancy',
+  'docs_type_survey_plan': 'Survey Plan',
+  'docs_type_identification': 'Identification',
+  'docs_type_other': 'Other',
+  'home_documents': 'Documents',
+  'home_certificates': 'Certificates',
+
+  // Settings
+  'settings_title': 'Settings',
+  'settings_subtitle': 'Configure your application',
+  'settings_subtitle_new': 'Language, profile, and account',
+  'settings_api_config': 'API Configuration',
+  'settings_base_url': 'Base URL',
+  'settings_emulator_hint':
+      'Phone Wi‑Fi: http://192.168.1.7:8000 · Emulator: http://10.0.2.2:8000',
+  'settings_language': 'Language',
+  'settings_save': 'Save Settings',
+  'settings_missing_field': 'Missing field',
+  'settings_base_url_required': 'Base URL is required.',
+  'settings_save_failed': 'Save failed',
+  'settings_save_error': 'Unexpected error while saving settings.',
+  'settings_profile_hint': 'Edit your name, phone, and profile photo.',
+  'settings_open_profile': 'Open profile',
+  'settings_connection': 'Connection',
+  'settings_live_api': 'Connected to the live ArdhiLens server:',
+
+  // Profile
+  'profile_title': 'Profile',
+  'profile_subtitle': 'Your account details',
+  'profile_save': 'Save changes',
+  'profile_saved': 'Profile updated.',
+  'profile_photo_updated': 'Profile photo updated.',
+  'profile_load_failed': 'Could not load profile.',
+  'profile_required_fields': 'Name and email are required.',
+  'common_name': 'Full name',
+  'common_phone': 'Phone number',
+
+  // Seller
+  'seller_home_brand': 'SELLER WORKSPACE',
+  'seller_home_subtitle': 'KYC, ownership docs, and buyers who want your land',
+  'seller_kyc_title': 'Seller identity KYC',
+  'seller_kyc_status': 'Status: :status',
+  'seller_kyc_submit': 'Submit NIDA KYC',
+  'seller_kyc_submitted': 'KYC submitted for review.',
+  'seller_kyc_explainer':
+      'Link your NIDA to plots registered in your name. Buyers can then find you when they express interest.',
+  'seller_kyc_required_for_proof':
+      'Complete NIDA KYC first so we can link your plots.',
+  'seller_plot_link_title': 'Plot link status',
+  'seller_plot_link_hint':
+      'Submit your NIN to connect plots where owner_nida matches your identity.',
+  'seller_ownership_proof': 'Prove ownership',
+  'seller_ownership_proof_hint':
+      'Run ownership attestation on a plot linked to your NIN. This is different from buyer due-diligence.',
+  'seller_start_ownership_proof': 'Start ownership proof',
+  'seller_attestations': 'Attestations',
+  'seller_action_needed': 'Action needed',
+  'seller_kyc_status_verified': 'Verified',
+  'seller_kyc_status_pending': 'Submitted — under review',
+  'seller_kyc_status_review': 'Needs manual review',
+  'seller_kyc_submitted_note':
+      'Your NIN is on file. You can prove ownership and receive buyer requests while admin reviews KYC.',
+  'seller_kyc_nin_linked': 'Linked NIN: :nin',
+  'seller_kyc_resubmit': 'Resubmit NIN',
+  'seller_nin_invalid': 'Enter a valid 20-character NIN.',
+  'seller_load_failed': 'Could not load seller dashboard.',
+  'seller_alerts': 'Alerts',
+  'seller_my_plots': 'My plots',
+  'seller_no_plots': 'No plots linked to your NIN yet. Ask admin to set owner_nida.',
+  'seller_has_boundary': 'Boundary on file',
+  'seller_no_boundary': 'Centroid only',
+  'seller_ownership_docs': 'Ownership docs',
+  'seller_buyers_title': 'Buyers interested',
+  'seller_buyers_subtitle': 'See who wants to buy your plots and reply.',
+  'seller_no_buyers': 'No buyer interest yet. You will be notified when a buyer reaches out.',
+  'seller_pending_buyers': 'Pending buyers',
+  'seller_accept': 'Accept',
+  'seller_decline': 'Decline',
+  'seller_reply_hint': 'Optional reply to buyer',
+  'seller_response_saved': 'Response sent to buyer.',
+  'seller_recent_checks': 'Recent buyer verifications',
+  'seller_no_checks': 'No buyers have verified your plots yet.',
+  'common_status': 'Status',
+
+  // Buyer workspace
+  'buyer_workspace': 'Buyer tools',
+  'buyer_workspace_hint': 'Verify land, check document validity, and contact sellers.',
+  'buyer_check_docs': 'Document validity',
+  'buyer_check_docs_hint': 'Upload and review authenticity scores',
+  'buyer_interest': 'Talk to seller',
+  'buyer_interest_hint': 'Send interest on a plot',
+  'buyer_certificates': 'Fingerprint certs',
+  'buyer_certificates_hint': 'Download signed verification PDFs',
+  'buyer_alerts_hint': 'Verification and seller replies',
+
+  // Interest / communication
+  'interest_title': 'Purchase interest',
+  'interest_express': 'Tell the seller you want this land',
+  'interest_express_hint': 'Seller sees your request on their dashboard and can reply.',
+  'interest_message_hint': 'Message to seller (optional)',
+  'interest_send': 'Send interest',
+  'interest_sent': 'Seller has been notified of your interest.',
+  'interest_my_requests': 'My requests',
+  'interest_empty_buyer': 'You have not contacted any seller yet.',
+  'interest_seller_reply': 'Seller reply',
+  'interest_seller': 'Seller',
+  'interest_plot_required': 'Enter a plot reference.',
+  'interest_load_failed': 'Could not load your interest requests.',
+  'interest_default_message': 'I verified this plot and I am interested in buying.',
+
+  // Certificate extras
+  'result_fingerprint': 'Digital fingerprint',
+  'cert_download_fingerprint': 'Download fingerprint PDF',
+  'result_certificate_missing': 'Fingerprint document not ready',
+  'result_certificate_missing_hint':
+      'Your verification qualifies for a signed certificate. Tap to generate it now.',
+  'result_generate_certificate': 'Generate fingerprint document',
+  'cert_type_buyer': 'Pre-Purchase Verification Certificate',
+  'cert_type_seller': 'Ownership Attestation Certificate',
+  'result_interest_title': 'Interested in this land?',
+  'result_interest_hint': 'Notify the seller so they can see your request and reply.',
+  'result_interest_cta': 'Notify seller I want to buy',
+
+  // Auth extras
+  'auth_forgot_title': 'Reset Password',
+  'auth_forgot_subtitle': 'We will email a 6-digit code',
+  'auth_forgot_step1': 'Enter your account email',
+  'auth_forgot_step1_hint':
+      'We will send a one-time code to reset your password.',
+  'auth_forgot_step2': 'Enter code and new password',
+  'auth_forgot_step2_hint':
+      'Check your inbox/spam for the 6-digit ArdhiLens code.',
+  'auth_send_code': 'Send Code',
+  'auth_code_sent': 'Reset code sent. Check your email (and spam).',
+  'auth_code_onscreen':
+      'Email delivery failed. Your reset code is :code (also filled below).',
+  'auth_otp_code': '6-digit code',
+  'auth_reset_password': 'Reset Password',
+  'auth_reset_success': 'Password updated. Sign in with the new password.',
+  'auth_back_to_email': 'Use a different email',
+
+  // Date / months
+  'date_jan': 'Jan',
+  'date_feb': 'Feb',
+  'date_mar': 'Mar',
+  'date_apr': 'Apr',
+  'date_may': 'May',
+  'date_jun': 'Jun',
+  'date_jul': 'Jul',
+  'date_aug': 'Aug',
+  'date_sep': 'Sep',
+  'date_oct': 'Oct',
+  'date_nov': 'Nov',
+  'date_dec': 'Dec',
+
+  // Step badges
+  'step_badge_1': 'STEP 1 OF 4',
+  'step_badge_2': 'STEP 2 OF 4',
+  'step_badge_3': 'STEP 3 OF 4',
+  'step_badge_4': 'STEP 4 OF 4',
+};

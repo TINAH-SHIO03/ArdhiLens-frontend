@@ -19,7 +19,7 @@ class PlotController extends GetxController {
     final reference = plotReferenceController.text.trim();
 
     if (reference.isEmpty) {
-      errorMessage.value = 'Plot reference is required.';
+      errorMessage.value = 'err_plot_required'.tr;
       return;
     }
 
@@ -38,7 +38,7 @@ class PlotController extends GetxController {
       }
       errorMessage.value = error.message;
     } catch (_) {
-      errorMessage.value = 'Unexpected error while finding plot.';
+      errorMessage.value = 'err_plot_unexpected'.tr;
     } finally {
       isLoading.value = false;
     }

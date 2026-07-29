@@ -1,15 +1,13 @@
 import '../core/api_client.dart';
 import '../core/api_exception.dart';
-import '../core/storage_service.dart';
 import '../models/api_envelope.dart';
 import '../models/answer_input.dart';
 import '../models/verification_result.dart';
 
 class AnswersService {
-  AnswersService(this._apiClient, this._storage);
+  AnswersService(this._apiClient);
 
   final ApiClient _apiClient;
-  final StorageService _storage;
 
   Future<VerificationResult> verifyAnswers({
     required String verificationToken,
@@ -34,7 +32,6 @@ class AnswersService {
       throw ApiException(message: envelope.message, errors: envelope.errors);
     }
 
-    await _storage.clearVerificationSession();
     return envelope.data!;
   }
 }

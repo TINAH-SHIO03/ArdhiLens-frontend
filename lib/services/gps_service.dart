@@ -12,6 +12,10 @@ class GpsService {
     required String verificationToken,
     required double latitude,
     required double longitude,
+    double? accuracyMeters,
+    double? altitude,
+    double? speedMps,
+    String mode = 'remote',
   }) async {
     final json = await _apiClient.post(
       '/land-verification/gps',
@@ -19,6 +23,10 @@ class GpsService {
         'verification_token': verificationToken,
         'latitude': latitude,
         'longitude': longitude,
+        'mode': mode,
+        if (accuracyMeters != null) 'accuracy_meters': accuracyMeters,
+        if (altitude != null) 'altitude': altitude,
+        if (speedMps != null) 'speed_mps': speedMps,
       },
     );
 

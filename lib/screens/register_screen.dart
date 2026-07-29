@@ -72,8 +72,8 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
               const SizedBox(height: 20),
               const LlBackButton(),
               const SizedBox(height: 24),
-              const Text(
-                'Jifunze Kuangalia',
+              Text(
+                'register_tagline'.tr,
                 style: TextStyle(
                   color: AppColors.accent,
                   fontSize: 14,
@@ -82,9 +82,9 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                 ),
               ),
               const SizedBox(height: 4),
-              const LlTitleBlock(
-                title: 'Create Account',
-                subtitle: 'Set up your verification profile',
+              LlTitleBlock(
+                title: 'register_title'.tr,
+                subtitle: 'register_subtitle'.tr,
               ),
               const SizedBox(height: 40),
               LlSurfaceCard(
@@ -93,7 +93,7 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const LlFieldLabel('Full Name'),
+                    LlFieldLabel('common_full_name'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller: widget.controller.registerNameController,
@@ -102,7 +102,7 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                       textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 16),
-                    const LlFieldLabel('Email Address'),
+                    LlFieldLabel('common_email'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller: widget.controller.registerEmailController,
@@ -112,7 +112,7 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                       textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 16),
-                    const LlFieldLabel('Phone Number (optional)'),
+                    LlFieldLabel('register_phone_optional'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller: widget.controller.registerPhoneController,
@@ -122,7 +122,31 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                       textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 16),
-                    const LlFieldLabel('Password'),
+                    LlFieldLabel('register_i_am_a'.tr),
+                    const SizedBox(height: 8),
+                    Obx(() => Row(
+                      children: [
+                        Expanded(
+                          child: _RoleChip(
+                            label: 'common_buyer'.tr,
+                            icon: Icons.shopping_cart_outlined,
+                            selected: widget.controller.selectedRole.value == 'buyer',
+                            onTap: () => widget.controller.selectedRole.value = 'buyer',
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _RoleChip(
+                            label: 'common_seller'.tr,
+                            icon: Icons.store_outlined,
+                            selected: widget.controller.selectedRole.value == 'seller',
+                            onTap: () => widget.controller.selectedRole.value = 'seller',
+                          ),
+                        ),
+                      ],
+                    )),
+                    const SizedBox(height: 16),
+                    LlFieldLabel('common_password'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller: widget.controller.registerPasswordController,
@@ -144,7 +168,7 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const LlFieldLabel('Confirm Password'),
+                    LlFieldLabel('register_confirm_password'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller:
@@ -178,7 +202,7 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                     }),
                     Obx(
                       () => LlPrimaryButton(
-                        label: 'Create Account',
+                        label: 'register_title'.tr,
                         onPressed: widget.controller.register,
                         isLoading: widget.controller.isLoading.value,
                         icon: Icons.person_add_alt_1_rounded,
@@ -191,8 +215,8 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Already have an account? ',
+                  Text(
+                    'register_has_account'.tr,
                     style: TextStyle(
                       color: Color(0xFF757575),
                       fontSize: 14,
@@ -200,8 +224,8 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
                   ),
                   GestureDetector(
                     onTap: () => Get.toNamed(Routes.login),
-                    child: const Text(
-                      'Sign In',
+                    child: Text(
+                      'login_title'.tr,
                       style: TextStyle(
                         color: AppColors.brand,
                         fontSize: 14,
@@ -214,6 +238,66 @@ class _RegisterScreenContentState extends State<RegisterScreenContent>
               const SizedBox(height: 40),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RoleChip extends StatelessWidget {
+  const _RoleChip({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        decoration: BoxDecoration(
+          color: selected
+              ? const Color(0xFF0A3D2E).withValues(alpha: 0.1)
+              : Colors.grey.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected
+                ? const Color(0xFF0A3D2E)
+                : Colors.grey.withValues(alpha: 0.2),
+            width: selected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: selected
+                  ? const Color(0xFF0A3D2E)
+                  : const Color(0xFF9E9E9E),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected
+                    ? const Color(0xFF0A3D2E)
+                    : const Color(0xFF9E9E9E),
+              ),
+            ),
+          ],
         ),
       ),
     );

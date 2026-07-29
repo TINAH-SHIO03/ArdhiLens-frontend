@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/nin_controller.dart';
+import '../design/app_colors.dart';
 import '../widgets/ll_ui.dart';
 
 class NinScreen extends GetView<NinController> {
@@ -68,11 +69,11 @@ class _NinScreenContentState extends State<NinScreenContent>
               const SizedBox(height: 16),
               const LlBackButton(),
               const SizedBox(height: 24),
-              const LlStepBadge(label: 'STEP 3 OF 4'),
+              LlStepBadge(label: 'nin_step_3_of_4'.tr),
               const SizedBox(height: 12),
-              const LlTitleBlock(
-                title: 'Identity Verification',
-                subtitle: 'Provide your national ID number',
+              LlTitleBlock(
+                title: 'nin_title'.tr,
+                subtitle: 'nin_subtitle'.tr,
               ),
               const SizedBox(height: 22),
               Container(
@@ -92,7 +93,7 @@ class _NinScreenContentState extends State<NinScreenContent>
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Your NIN is used only for verification and never stored.',
+                        'nin_disclaimer'.tr,
                         style: TextStyle(
                           color: Colors.green.shade700,
                           fontSize: 13,
@@ -109,16 +110,25 @@ class _NinScreenContentState extends State<NinScreenContent>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const LlFieldLabel('National ID Number'),
+                    LlFieldLabel('nin_label'.tr),
                     const SizedBox(height: 8),
                     LlInputField(
                       controller: widget.controller.ninController,
-                      hint: 'e.g., 12345678901234567890',
+                      hint: 'nin_hint'.tr,
                       icon: Icons.badge_rounded,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.name,
                       maxLength: 20,
                       textInputAction: TextInputAction.done,
                       onSubmitted: (_) => widget.controller.generateQuestions(),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'nin_demo_map'.tr,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textMuted,
+                        height: 1.35,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Obx(() {
@@ -130,7 +140,7 @@ class _NinScreenContentState extends State<NinScreenContent>
                     }),
                     Obx(
                       () => LlPrimaryButton(
-                        label: 'Generate Questions',
+                        label: 'nin_generate'.tr,
                         onPressed: widget.controller.generateQuestions,
                         isLoading: widget.controller.isLoading.value,
                       ),

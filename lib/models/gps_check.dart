@@ -8,6 +8,8 @@ class GpsCheck {
     required this.submittedLatitude,
     required this.submittedLongitude,
     required this.verifiedAt,
+    this.verificationMode,
+    this.proximityPassed,
   });
 
   final bool passed;
@@ -16,6 +18,8 @@ class GpsCheck {
   final double? submittedLatitude;
   final double? submittedLongitude;
   final DateTime? verifiedAt;
+  final String? verificationMode;
+  final bool? proximityPassed;
 
   factory GpsCheck.fromJson(Map<String, dynamic> json) {
     return GpsCheck(
@@ -25,6 +29,8 @@ class GpsCheck {
       submittedLatitude: asDouble(json['submitted_latitude']),
       submittedLongitude: asDouble(json['submitted_longitude']),
       verifiedAt: DateTime.tryParse(json['verified_at'] as String? ?? ''),
+      verificationMode: json['verification_mode'] as String?,
+      proximityPassed: json['proximity_passed'] as bool?,
     );
   }
 }

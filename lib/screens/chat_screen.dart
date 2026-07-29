@@ -69,8 +69,8 @@ class _ChatScreenContentState extends State<ChatScreenContent>
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Land Assistant',
+            Text(
+              'chat_title'.tr,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
@@ -80,7 +80,7 @@ class _ChatScreenContentState extends State<ChatScreenContent>
             Obx(() {
               final activeLogId = widget.controller.activeVerificationLogId;
               return Text(
-                activeLogId > 0 ? 'Reference log: $activeLogId' : 'Chat',
+                activeLogId > 0 ? 'chat_ref_log'.trParams({'id': '$activeLogId'}) : 'chat_fallback_title'.tr,
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
@@ -128,7 +128,7 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Assistant Unavailable',
+                    'chat_unavailable_title'.tr,
                     style: TextStyle(
                       color: Colors.red.shade700,
                       fontSize: 18,
@@ -136,8 +136,8 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'This conversation is not available\nfor this result.',
+                  Text(
+                    'chat_unavailable_desc'.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF9E9E9E),
@@ -194,8 +194,8 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Start a conversation',
+                            Text(
+                              'chat_empty_title'.tr,
                               style: TextStyle(
                                 color: Color(0xFF424242),
                                 fontSize: 16,
@@ -203,8 +203,8 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'Ask questions about your verification result\nor choose one of the prompts above.',
+                            Text(
+                              'chat_empty_desc'.tr,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFF9E9E9E),
@@ -233,19 +233,19 @@ class _ChatScreenContentState extends State<ChatScreenContent>
               // Loading indicator
               if (isLoading) ...[
                 const SizedBox(height: 12),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'Assistant is thinking...',
-                        style: TextStyle(
+                        'chat_thinking'.tr,
+                        style: const TextStyle(
                           color: Color(0xFF9E9E9E),
                           fontSize: 12,
                         ),
@@ -330,8 +330,8 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                               },
                               enabled: !isLoading,
                               style: const TextStyle(fontSize: 14),
-                              decoration: const InputDecoration(
-                                hintText: 'Ask a follow-up question...',
+                              decoration: InputDecoration(
+                                hintText: 'chat_input_hint'.tr,
                                 hintStyle: TextStyle(color: Color(0xFF9E9E9E)),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
@@ -402,7 +402,7 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                 Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Text(
-                    'Assistant',
+                    'chat_assistant_label'.tr,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey.shade600,
@@ -426,7 +426,7 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Outside verification scope',
+                    'chat_out_of_scope'.tr,
                     style: TextStyle(
                       color: Colors.orange.shade700,
                       fontSize: 11,
@@ -447,7 +447,7 @@ class _ChatScreenContentState extends State<ChatScreenContent>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Recommended: ${message.recommendedAction}',
+                    'chat_recommended'.trParams({'action': message.recommendedAction}),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,

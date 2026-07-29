@@ -68,11 +68,11 @@ class _PlotScreenContentState extends State<PlotScreenContent>
               const SizedBox(height: 16),
               const LlBackButton(),
               const SizedBox(height: 24),
-              const LlStepBadge(label: 'STEP 1 OF 4'),
+              LlStepBadge(label: 'plot_step_1_of_4'.tr),
               const SizedBox(height: 12),
-              const LlTitleBlock(
-                title: 'Find Your Plot',
-                subtitle: 'Enter your plot reference number',
+              LlTitleBlock(
+                title: 'plot_title'.tr,
+                subtitle: 'plot_subtitle'.tr,
               ),
               const SizedBox(height: 40),
               LlSurfaceCard(
@@ -80,11 +80,11 @@ class _PlotScreenContentState extends State<PlotScreenContent>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const LlFieldLabel('Plot Reference'),
+                    LlFieldLabel('plot_reference'.tr),
                     const SizedBox(height: 12),
                     LlInputField(
                       controller: widget.controller.plotReferenceController,
-                      hint: 'e.g., PLOT-001',
+                      hint: 'plot_reference_hint'.tr,
                       icon: Icons.location_on_outlined,
                       textInputAction: TextInputAction.done,
                       onSubmitted: (_) => widget.controller.submitPlot(),
@@ -99,7 +99,7 @@ class _PlotScreenContentState extends State<PlotScreenContent>
                     }),
                     Obx(
                       () => LlPrimaryButton(
-                        label: 'Find Plot',
+                        label: 'plot_find'.tr,
                         onPressed: widget.controller.submitPlot,
                         isLoading: widget.controller.isLoading.value,
                       ),

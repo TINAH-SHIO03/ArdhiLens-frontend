@@ -11,6 +11,7 @@ import '../models/owner_link_failure_result.dart';
 import '../models/verification_outcome.dart';
 import '../services/answers_service.dart';
 import '../services/history_service.dart';
+import 'notification_controller.dart';
 
 class QuestionsController extends GetxController {
   final AnswersService _answersService = Get.find<AnswersService>();
@@ -49,7 +50,7 @@ class QuestionsController extends GetxController {
 
   Future<void> submitAnswers() async {
     if (remainingSeconds.value <= 0) {
-      errorMessage.value = 'Challenge expired. Generate new questions.';
+      errorMessage.value = 'err_challenge_expired'.tr;
       return;
     }
 
@@ -59,7 +60,7 @@ class QuestionsController extends GetxController {
     if (verificationToken == null ||
         verificationToken.isEmpty ||
         challengeId.isEmpty) {
-      errorMessage.value = 'Verification session missing. Start again.';
+      errorMessage.value = 'err_session_missing'.tr;
       return;
     }
 
@@ -67,7 +68,7 @@ class QuestionsController extends GetxController {
     for (final question in questionData.questions) {
       final value = answerControllers[question.questionId]?.text.trim() ?? '';
       if (value.isEmpty) {
-        errorMessage.value = 'Please answer all questions.';
+        errorMessage.value = 'err_answer_all'.tr;
         return;
       }
       answers.add(AnswerInput(questionId: question.questionId, answer: value));
@@ -84,6 +85,10 @@ class QuestionsController extends GetxController {
       );
 
       await _historyService.addHistory(result.toHistoryJson());
+      // Only bump unread badge — do not reload notification/certificate lists here.
+      if (Get.isRegistered<NotificationController>()) {
+        await Get.find<NotificationController>().refreshUnreadCount();
+      }
       Get.offNamed('/result', arguments: VerificationOutcome.success(result));
     } on ApiException catch (error) {
       if (error.statusCode == 401) {
@@ -107,10 +112,22 @@ class QuestionsController extends GetxController {
 
       errorMessage.value = error.message;
     } catch (_) {
-      errorMessage.value = 'Unexpected error while submitting answers.';
+      errorMessage.value = 'err_answers_unexpected'.tr;
     } finally {
       isLoading.value = false;
     }
+  }
+
+  bool get hasDemoAnswers =>
+      questionData.questions.any((q) => (q.demoAnswer ?? '').isNotEmpty);
+
+  void fillDemoAnswers() {
+    for (final question in questionData.questions) {
+      final answer = question.demoAnswer;
+      if (answer == null || answer.isEmpty) continue;
+      answerControllers[question.questionId]?.text = answer;
+    }
+    errorMessage.value = null;
   }
 
   @override
