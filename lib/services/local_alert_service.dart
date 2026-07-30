@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
+import '../controllers/seller_home_controller.dart';
 import '../core/storage_service.dart';
 import '../models/notification_item.dart';
 import 'notification_service.dart';
@@ -65,6 +68,11 @@ class LocalAlertService extends GetxService {
 
       for (final item in fresh.take(3)) {
         await showLocalAlert(item.title, item.body);
+        if (item.type == 'kyc_decision' &&
+            Get.isRegistered<SellerHomeController>()) {
+          // Admin changed KYC — refresh seller home from live API.
+          unawaited(Get.find<SellerHomeController>().refreshDashboard());
+        }
       }
     } catch (_) {
       // Silent poll failure.

@@ -161,6 +161,10 @@ class SellerHomeScreen extends GetView<SellerHomeController> {
     final status = controller.kycStatus.value;
     final submitted = status != 'none';
     final statusLabel = _kycStatusLabel(status);
+    final statusColor = _kycStatusColor(status);
+    final statusBg = _kycStatusBackground(status);
+    final canResubmit =
+        status == 'needs_manual_review' || status == 'rejected' || status == 'required';
 
     return LlSurfaceCard(
       padding: const EdgeInsets.all(18),
@@ -179,9 +183,7 @@ class SellerHomeScreen extends GetView<SellerHomeController> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: status == 'verified'
-                        ? const Color(0xFFE8F5EE)
-                        : Colors.orange.shade50,
+                    color: statusBg,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -189,9 +191,7 @@ class SellerHomeScreen extends GetView<SellerHomeController> {
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
-                      color: status == 'verified'
-                          ? const Color(0xFF1A6B4A)
-                          : Colors.orange.shade900,
+                      color: statusColor,
                     ),
                   ),
                 ),
@@ -199,7 +199,7 @@ class SellerHomeScreen extends GetView<SellerHomeController> {
           ),
           const SizedBox(height: 6),
           Text(
-            submitted ? 'seller_kyc_submitted_note'.tr : 'seller_kyc_explainer'.tr,
+            _kycStatusNote(status),
             style: const TextStyle(color: AppColors.textSecondary, height: 1.4),
           ),
           if (submitted && controller.user.value?.nin != null) ...[
@@ -211,7 +211,7 @@ class SellerHomeScreen extends GetView<SellerHomeController> {
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ],
-          if (!submitted) ...[
+          if (!submitted || canResubmit) ...[
             const SizedBox(height: 12),
             LlInputField(
               controller: controller.ninController,
@@ -220,24 +220,10 @@ class SellerHomeScreen extends GetView<SellerHomeController> {
             ),
             const SizedBox(height: 12),
             LlPrimaryButton(
-              label: 'seller_kyc_submit'.tr,
+              label: submitted ? 'seller_kyc_resubmit'.tr : 'seller_kyc_submit'.tr,
               onPressed: controller.submitKyc,
               isLoading: controller.isLoading.value,
-              icon: Icons.verified_user_outlined,
-            ),
-          ] else if (status == 'needs_manual_review') ...[
-            const SizedBox(height: 12),
-            LlInputField(
-              controller: controller.ninController,
-              hint: '19901215-25555-00001',
-              icon: Icons.badge_outlined,
-            ),
-            const SizedBox(height: 12),
-            LlPrimaryButton(
-              label: 'seller_kyc_resubmit'.tr,
-              onPressed: controller.submitKyc,
-              isLoading: controller.isLoading.value,
-              icon: Icons.refresh_rounded,
+              icon: submitted ? Icons.refresh_rounded : Icons.verified_user_outlined,
             ),
           ],
         ],
@@ -250,7 +236,39 @@ class SellerHomeScreen extends GetView<SellerHomeController> {
       'verified' => 'seller_kyc_status_verified'.tr,
       'pending_review' => 'seller_kyc_status_pending'.tr,
       'needs_manual_review' => 'seller_kyc_status_review'.tr,
+      'rejected' => 'seller_kyc_status_rejected'.tr,
+      'required' => 'seller_kyc_status_required'.tr,
       _ => status,
+    };
+  }
+
+  String _kycStatusNote(String status) {
+    return switch (status) {
+      'none' => 'seller_kyc_explainer'.tr,
+      'verified' => 'seller_kyc_verified_note'.tr,
+      'rejected' => 'seller_kyc_rejected_note'.tr,
+      'needs_manual_review' => 'seller_kyc_review_note'.tr,
+      'required' => 'seller_kyc_required_note'.tr,
+      'pending_review' => 'seller_kyc_submitted_note'.tr,
+      _ => 'seller_kyc_submitted_note'.tr,
+    };
+  }
+
+  Color _kycStatusColor(String status) {
+    return switch (status) {
+      'verified' => const Color(0xFF1A6B4A),
+      'rejected' => const Color(0xFFB91C1C),
+      'needs_manual_review' => const Color(0xFFB45309),
+      _ => Colors.orange.shade900,
+    };
+  }
+
+  Color _kycStatusBackground(String status) {
+    return switch (status) {
+      'verified' => const Color(0xFFE8F5EE),
+      'rejected' => const Color(0xFFFEE2E2),
+      'needs_manual_review' => const Color(0xFFFFF7ED),
+      _ => Colors.orange.shade50,
     };
   }
 

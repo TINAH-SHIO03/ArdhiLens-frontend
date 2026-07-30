@@ -388,8 +388,18 @@ const Map<String, String> appSw = {
   'seller_kyc_status_verified': 'Imethibitishwa',
   'seller_kyc_status_pending': 'Imewasilishwa — inakaguliwa',
   'seller_kyc_status_review': 'Inahitaji ukaguzi wa mkono',
+  'seller_kyc_status_rejected': 'Imekataliwa',
+  'seller_kyc_status_required': 'KYC inahitajika',
   'seller_kyc_submitted_note':
       'NIN yako imesajiliwa. Unaweza kuthibitisha umiliki na kupokea maombi ya wanunuzi wakati msimamizi anakagua KYC.',
+  'seller_kyc_verified_note':
+      'KYC yako ya muuzaji imethibitishwa. Unaweza kuthibitisha umiliki na kupokea maombi ya wanunuzi.',
+  'seller_kyc_rejected_note':
+      'KYC yako ya muuzaji imekataliwa. Soma maelezo katika Arifa, kisha wasilisha tena NIN sahihi.',
+  'seller_kyc_review_note':
+      'KYC yako inahitaji ukaguzi wa mkono. Unaweza kuwasilisha NIN tena ikiwa inahitajika.',
+  'seller_kyc_required_note':
+      'Kamilisha KYC ya NIDA ili tuunganishe mashamba yako na kuwezesha zana za muuzaji.',
   'seller_kyc_nin_linked': 'NIN iliyounganishwa: :nin',
   'seller_kyc_resubmit': 'Wasilisha NIN tena',
   'seller_nin_invalid': 'Weka NIN sahihi ya herufi 20.',

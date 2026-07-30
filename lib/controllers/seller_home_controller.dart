@@ -92,6 +92,16 @@ class SellerHomeController extends GetxController {
     linkedPlotCount.value =
         int.tryParse('${data['linked_plot_count'] ?? 0}') ?? 0;
 
+    final current = user.value;
+    if (current != null) {
+      final updated = current.copyWith(
+        kycStatus: kycStatus.value,
+        nin: data['nin']?.toString() ?? current.nin,
+      );
+      user.value = updated;
+      _authService.updateCachedUser(updated);
+    }
+
     final rawPlots = data['plots'];
     if (rawPlots is List) {
       plots.assignAll(

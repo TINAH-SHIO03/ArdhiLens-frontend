@@ -19,6 +19,10 @@ class AuthService {
 
   void clearCachedUser() => _cachedUser = null;
 
+  void updateCachedUser(AuthUser user) {
+    _cachedUser = user;
+  }
+
   Future<void> _persistSessionUser(AuthUser user) async {
     _cachedUser = user;
     await _storage.setUserRole(user.role);

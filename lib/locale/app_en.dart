@@ -388,8 +388,18 @@ const Map<String, String> appEn = {
   'seller_kyc_status_verified': 'Verified',
   'seller_kyc_status_pending': 'Submitted — under review',
   'seller_kyc_status_review': 'Needs manual review',
+  'seller_kyc_status_rejected': 'Rejected',
+  'seller_kyc_status_required': 'KYC required',
   'seller_kyc_submitted_note':
       'Your NIN is on file. You can prove ownership and receive buyer requests while admin reviews KYC.',
+  'seller_kyc_verified_note':
+      'Your seller KYC is verified. You can prove ownership and receive buyer requests.',
+  'seller_kyc_rejected_note':
+      'Your seller KYC was rejected. Read the admin note in Alerts, then resubmit with a valid NIN.',
+  'seller_kyc_review_note':
+      'Your KYC needs manual review. You can resubmit your NIN if needed.',
+  'seller_kyc_required_note':
+      'Complete NIDA KYC so we can link your plots and enable seller tools.',
   'seller_kyc_nin_linked': 'Linked NIN: :nin',
   'seller_kyc_resubmit': 'Resubmit NIN',
   'seller_nin_invalid': 'Enter a valid 20-character NIN.',

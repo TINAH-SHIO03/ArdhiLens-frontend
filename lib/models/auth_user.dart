@@ -43,4 +43,26 @@ class AuthUser {
       hasAvatar: asBool(json['has_avatar']) ?? false,
     );
   }
+
+  AuthUser copyWith({
+    String? name,
+    String? email,
+    String? phoneNumber,
+    String? nin,
+    String? kycStatus,
+    bool? hasAvatar,
+  }) {
+    return AuthUser(
+      id: id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      role: role,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      isActive: isActive,
+      nin: nin ?? this.nin,
+      emailVerified: emailVerified,
+      kycStatus: kycStatus ?? this.kycStatus,
+      hasAvatar: hasAvatar ?? this.hasAvatar,
+    );
+  }
 }
